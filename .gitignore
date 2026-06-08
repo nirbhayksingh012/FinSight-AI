@@ -1,0 +1,26 @@
+# Local environment variables and secrets
+.env
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python caching and bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ChromaDB local storage
+.chroma_stock_analyzer/
+
+# IDE files
+.cursor/
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -2,7 +2,13 @@ streamlit
 yfinance
 pandas
 plotly
-scikit-learn
-numpy
-prophet
 streamlit-autorefresh
+python-dotenv
+groq
+chromadb
+transformers
+torch
+torchvision
+sentencepiece
+safetensors
+protobuf>=3.20,<5
