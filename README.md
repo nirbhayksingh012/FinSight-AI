@@ -1,86 +1,138 @@
-# FinSight AI: Stock Sentiment Analyzer & RAG Chat Assistant
+# FinSight AI — Stock Sentiment Analyzer & RAG-Powered Financial Assistant
 
-**FinSight AI** is a premium, Streamlit-powered financial intelligence dashboard. It fetches real-time stock price data, aggregates financial headlines, classifies sentiment using deep learning (FinBERT), and hosts an interactive Retrieval-Augmented Generation (RAG) chat assistant powered by Groq and ChromaDB.
+## Overview
 
----
+FinSight AI is an end-to-end financial intelligence platform that combines real-time market data, financial news sentiment analysis, Retrieval-Augmented Generation (RAG), and Large Language Models (LLMs) to help investors make data-driven decisions.
 
-## 🌟 Key Features
-
-*   **Interactive Market Visualizations:** Seamlessly renders candlesticks, volumes, and moving averages (20-day & 50-day MAs) with Plotly.
-*   **FinBERT Sentiment Engine:** Automatically scrapes Google News RSS feeds and analyzes headlines using `ProsusAI/finbert` (a BERT model fine-tuned for financial sentiment) to classify news as *Bullish*, *Bearish*, or *Neutral*.
-*   **Automatic Context Indexing:** On startup, the application fetches price data and news for all active tickers and indexes them in the background into a local vector database.
-*   **Auto-Generated AI Analyst Reports:** Auto-generates detailed analyst reports (covering price action, news drivers, sentiment trends, and risk assessments) utilizing Groq's low-latency LLMs.
-*   **RAG Chat Analyst:** A local chat interface grounded in your ChromaDB vector store. Ask questions about your stocks (e.g., *"Why did this stock drop yesterday?"* or *"What are the risks?"*) and receive answers with cited sources (news, yfinance summaries, analyst reports).
-*   **Normalized Portfolio Comparisons:** Interactive comparison dashboard to visualize returns across multiple stocks simultaneously.
-*   **Premium Glassmorphic Dark-UI:** Custom-injected CSS styling built to provide a premium dark-themed visual experience.
+The platform automatically collects stock market data, analyzes financial news using FinBERT, generates AI-powered analyst reports, and enables users to interact with their investment data through a conversational AI assistant.
 
 ---
 
-## 🛠️ Technology Stack
+## Key Features
 
-*   **Frontend / UI:** [Streamlit](https://streamlit.io/) with custom raw CSS styles.
-*   **Stock Data API:** [yfinance](https://github.com/ranaroussi/yfinance) (Yahoo Finance API wrapper).
-*   **Data Wrangling:** [Pandas](https://pandas.pydata.org/).
-*   **Plotting Engine:** [Plotly](https://plotly.com/) (interactive HTML charts).
-*   **Sentiment Classifier:** [Hugging Face Transformers](https://huggingface.co/) running FinBERT on a [PyTorch](https://pytorch.org/) backend.
-*   **Vector Database:** [ChromaDB](https://www.trychroma.com/) (local vector index).
-*   **Large Language Model (LLM):** [Groq API](https://groq.com/) for ultra-fast RAG answering and report generation.
+### Real-Time Market Analytics
+
+* Live stock market data powered by Yahoo Finance
+* Interactive candlestick and volume charts
+* Technical indicators including 20-Day and 50-Day Moving Averages
+* Multi-stock comparison dashboard with normalized performance tracking
+
+### AI-Powered Sentiment Analysis
+
+* Financial news aggregation using Google News RSS feeds
+* Sentiment classification using FinBERT (Financial BERT)
+* Classification into:
+
+  * Bullish
+  * Bearish
+  * Neutral
+* Automatic sentiment trend monitoring for selected stocks
+
+### Retrieval-Augmented Generation (RAG)
+
+* Automatic indexing of:
+
+  * Financial news articles
+  * Stock summaries
+  * AI-generated analyst reports
+* Vector storage using ChromaDB
+* Semantic search for context-aware information retrieval
+
+### Intelligent Financial Assistant
+
+* Powered by Groq LLM APIs
+* Context-aware financial question answering
+* Source-grounded responses using retrieved financial data
+* Example queries:
+
+  * "Why did NVIDIA stock decline today?"
+  * "What risks are associated with Tesla?"
+  * "Summarize recent news affecting Apple stock."
+
+### Automated Analyst Reports
+
+* AI-generated stock analysis reports
+* Market trend evaluation
+* Sentiment-driven insights
+* Risk assessment and investment observations
+
+### Modern User Experience
+
+* Premium dark-themed dashboard
+* Responsive Streamlit interface
+* Interactive Plotly visualizations
+* Custom glassmorphism-inspired UI design
 
 ---
 
-## 🚀 Getting Started
+## System Architecture
 
-### 1. Prerequisites
-Ensure you have **Python 3.9 - 3.11** installed.
-
-### 2. Clone the Repository & Install Dependencies
-Clone the repository, create a virtual environment, and install the required Python packages:
-
-```bash
-# Set up a virtual environment
-python -m venv .venv
-
-# Activate the virtual environment (Windows)
-.venv\Scripts\activate
-
-# Install requirements
-pip install -r requirements.txt
-```
-
-### 3. Configure Environment Variables
-Create a file named `.env` in the root of the project (or use the template generated by the application) and add your keys:
-
-```env
-# Groq API key for LLM analysis and chat (Get one at https://console.groq.com/)
-GROQ_API_KEY=your_groq_api_key_here
-
-# Hugging Face token to increase download rate limits (Get a free Read token at https://huggingface.co/settings/tokens)
-HF_TOKEN=your_huggingface_read_token_here
-```
-
-### 4. Run the Application
-Start the Streamlit application:
-
-```bash
-streamlit run app.py
-```
+Data Sources
+↓
+Yahoo Finance + Google News RSS
+↓
+Data Processing Layer
+(Pandas)
+↓
+FinBERT Sentiment Analysis
+↓
+ChromaDB Vector Store
+↓
+Groq LLM + RAG Pipeline
+↓
+Interactive Streamlit Dashboard
 
 ---
 
-## 📂 Project Structure
+## Technology Stack
 
-```
-├── .chroma_stock_analyzer/   # Local ChromaDB vector database files
-├── stock_analyzer/           # Core source files
-│   ├── charts.py            # Plotly chart generators
-│   ├── constants.py         # App configuration & stock dictionary
-│   ├── data.py              # yfinance data pullers
-│   ├── llm_agent.py         # Groq LLM connectors and prompt wrappers
-│   ├── main.py              # Main dashboard routing, states, and RAG loops
-│   ├── news.py              # Google News RSS scraper
-│   ├── sentiment.py         # Hugging Face FinBERT sentiment classifier
-│   └── styles.py            # Premium custom CSS stylesheets
-├── app.py                    # App entrypoint
-├── requirements.txt          # Package dependencies
-└── .env                      # Local secret configs (ignored in git)
-```
+| Category                 | Technologies                       |
+| ------------------------ | ---------------------------------- |
+| Frontend                 | Streamlit, HTML, CSS               |
+| Visualization            | Plotly                             |
+| Data Processing          | Pandas                             |
+| Market Data              | yFinance                           |
+| NLP & Sentiment Analysis | FinBERT, Hugging Face Transformers |
+| Deep Learning Backend    | PyTorch                            |
+| Vector Database          | ChromaDB                           |
+| LLM Integration          | Groq API                           |
+| Retrieval System         | RAG Architecture                   |
+| Language                 | Python                             |
+
+---
+
+## Technical Highlights
+
+* Built a complete Retrieval-Augmented Generation (RAG) pipeline for financial intelligence.
+* Integrated FinBERT for domain-specific financial sentiment analysis.
+* Developed automated vector indexing workflows for financial news and reports.
+* Implemented semantic search using ChromaDB embeddings.
+* Generated AI-powered analyst reports using Groq LLMs.
+* Designed scalable modular architecture for future AI and financial analytics integrations.
+
+---
+
+## Impact
+
+FinSight AI transforms raw financial data into actionable intelligence by combining machine learning, natural language processing, vector search, and generative AI. The platform demonstrates practical applications of AI in financial analytics, investment research, and conversational decision support systems.
+
+---
+
+## Future Enhancements
+
+* Portfolio risk analysis
+* Multi-agent financial research workflows
+* Earnings call transcript analysis
+* Real-time market alerts
+* Advanced forecasting models
+* Cloud deployment with CI/CD pipelines
+
+---
+
+## Author
+
+Nirbhay Singh 
+
+Artificial Intelligence & Machine Learning Engineer
+
+Focused on building production-ready AI systems, RAG applications, NLP solutions, and intelligent data-driven products.
