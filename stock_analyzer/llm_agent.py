@@ -3,7 +3,6 @@ Groq-powered LLM helpers for structured stock commentary and RAG chat.
 """
 
 from __future__ import annotations
-
 import json
 import os
 from typing import Any
