@@ -1,10 +1,17 @@
 from datetime import date
 
-PAGE_TITLE = "📊 Stock Sentiment Analyzer"
+PAGE_TITLE = "FinSight AI"
+
+# Groq model id (free tier; Llama 3 family).
+GROQ_MODEL = "llama-3.3-70b-versatile"
 
 DEFAULT_START_DATE = date(2023, 1, 1)
 
-DEFAULT_TICKER_SELECTION = ["AAPL – Apple Inc.", "MSFT – Microsoft Corporation"]
+DEFAULT_TICKER_SELECTION = [
+    "AAPL – Apple Inc.",
+    "MSFT – Microsoft Corporation",
+    "NVDA – NVIDIA Corporation",
+]
 
 TICKER_DICT: dict[str, str] = {
     "AAPL": "Apple Inc.",
@@ -44,11 +51,7 @@ TICKER_DICT: dict[str, str] = {
 }
 
 CHART_LAYOUT = {
-    "paper_bgcolor": "#0e1117",
-    "plot_bgcolor": "#0e1117",
-    "font": {"color": "#FAFAFA"},
+    "paper_bgcolor": "rgba(8, 15, 28, 0.96)",
+    "plot_bgcolor": "rgba(8, 15, 28, 0.96)",
+    "font": {"color": "#e8eef6", "family": "Segoe UI, system-ui, sans-serif"},
 }
-
-MIN_ROWS_FOR_LR_FORECAST = 100
-
-FORECAST_DAYS = 5 * 365
