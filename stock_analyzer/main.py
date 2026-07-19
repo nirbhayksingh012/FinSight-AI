@@ -560,22 +560,74 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
         st.warning("Select at least one ticker in the sidebar.")
         return
 
-    primary = st.selectbox("Focus ticker for AI tools", options=tickers)
+    if "ai_analyst_primary" not in st.session_state or st.session_state["ai_analyst_primary"] not in tickers:
+        st.session_state["ai_analyst_primary"] = tickers[0]
+
+    primary = st.session_state["ai_analyst_primary"]
+
+    st.markdown('<p class="sa-side-section" style="margin-top:0.2rem;margin-bottom:0.5rem;">Select Ticker Focus</p>', unsafe_allow_html=True)
+
+    card_cols = st.columns(min(len(tickers), 6))
+    for idx, t in enumerate(tickers):
+        with card_cols[idx % min(len(tickers), 6)]:
+            raw_t = fetch_stock_data(t, start_date, end_date)
+            if not raw_t.empty:
+                last_p = float(raw_t["Close"].iloc[-1])
+                prev_p = float(raw_t["Close"].iloc[-2]) if len(raw_t) >= 2 else last_p
+                pct_chg = (last_p / prev_p - 1.0) * 100.0 if prev_p else 0.0
+                sign = "+" if pct_chg >= 0 else ""
+                card_label = f"{t} · ${last_p:,.2f} ({sign}{pct_chg:.2f}%)"
+            else:
+                card_label = t
+
+            is_active = (t == primary)
+            btn_type = "primary" if is_active else "secondary"
+            if st.button(card_label, key=f"ai_ticker_card_{t}", type=btn_type, use_container_width=True):
+                st.session_state["ai_analyst_primary"] = t
+                st.session_state["rag_focus_pills"] = t
+                st.rerun()
+
     _init_chat_state(primary)
 
-    data = fetch_stock_data(primary, start_date, end_date)
-    if data.empty:
+    raw_data = fetch_stock_data(primary, start_date, end_date)
+    if raw_data.empty:
         st.error(f"No yfinance data for {primary} in the selected range.")
         return
 
-    data = data.copy()
-    data.dropna(inplace=True)
-    data.reset_index(drop=True, inplace=True)
-
-    stock_summary = _stock_text_summary(primary, data)
+    data = _prepare_ohlcv(raw_data)
 
     with st.spinner("Fetching latest headlines…"):
         headlines = _cached_headlines(primary)
+
+    titles = [h["title"] for h in headlines]
+    sent = _cached_sentiment(tuple(titles[:40])) if titles else sentiment.analyze_headlines_sentiment([])
+
+    last_full = data.iloc[-1]
+    last_close = float(last_full["Close"])
+    if len(data) >= 2:
+        prev_close = float(data["Close"].iloc[-2])
+        day_pct = (last_close / prev_close - 1.0) * 100.0 if prev_close else 0.0
+    else:
+        day_pct = 0.0
+
+    ma20_v = (
+        float(last_full["MA20"])
+        if "MA20" in data.columns and pd.notna(last_full.get("MA20"))
+        else float("nan")
+    )
+    ma50_v = (
+        float(last_full["MA50"])
+        if "MA50" in data.columns and pd.notna(last_full.get("MA50"))
+        else float("nan")
+    )
+    sent_label, sent_score, sent_cls = _sentiment_for_kpi(sent)
+
+    st.markdown(
+        _kpi_strip_html(last_close, day_pct, ma20_v, ma50_v, sent_label, sent_score, sent_cls),
+        unsafe_allow_html=True,
+    )
+
+    stock_summary = _stock_text_summary(primary, data)
 
     st.markdown("#### News (Google News RSS)")
     if not headlines:
@@ -585,8 +637,6 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
             st.markdown(f"- [{h['title']}]({h['link']})")
 
     st.markdown("#### Sentiment (FinBERT)")
-    titles = [h["title"] for h in headlines]
-    sent = _cached_sentiment(tuple(titles[:40])) if titles else sentiment.analyze_headlines_sentiment([])
     if sent.get("error"):
         st.warning(sent["error"])
     else:
