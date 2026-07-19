@@ -288,6 +288,78 @@ def app_shell_css() -> str:
         box-shadow: 0 0 16px rgba(56,189,248,0.18), inset 0 1px 0 rgba(255,255,255,0.06) !important;
     }
 
+    /* Active Ticker Button & Card Styles */
+    div.stButton > button[kind="primary"],
+    [data-testid="stBaseButton-primary"] {
+        background: linear-gradient(135deg, rgba(56,189,248,0.28) 0%, rgba(99,102,241,0.32) 100%) !important;
+        border: 1.5px solid #38bdf8 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        box-shadow: 0 0 18px rgba(56,189,248,0.4), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+        border-radius: 10px !important;
+        transition: all var(--sa-transition) !important;
+    }
+    div.stButton > button[kind="primary"]:hover,
+    [data-testid="stBaseButton-primary"]:hover {
+        background: linear-gradient(135deg, rgba(56,189,248,0.4) 0%, rgba(99,102,241,0.45) 100%) !important;
+        border-color: #7dd3fc !important;
+        box-shadow: 0 0 26px rgba(56,189,248,0.6) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    div.stButton > button[kind="secondary"],
+    [data-testid="stBaseButton-secondary"] {
+        background: rgba(17, 26, 46, 0.75) !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        color: rgba(226, 232, 240, 0.75) !important;
+        font-weight: 500 !important;
+        border-radius: 10px !important;
+        transition: all var(--sa-transition) !important;
+    }
+    div.stButton > button[kind="secondary"]:hover,
+    [data-testid="stBaseButton-secondary"]:hover {
+        background: rgba(30, 41, 59, 0.9) !important;
+        border-color: rgba(56, 189, 248, 0.4) !important;
+        color: #f1f5f9 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Active Ticker Focus Banner */
+    .sa-active-ticker-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.14) 0%, rgba(129, 140, 248, 0.08) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-left: 4px solid #38bdf8;
+        border-radius: 10px;
+        padding: 11px 16px;
+        margin: 14px 0 18px 0;
+        font-size: 0.88rem;
+        color: #f1f5f9;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    .sa-active-badge {
+        background: #38bdf8;
+        color: #080d18;
+        font-weight: 800;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    }
+    .sa-active-title {
+        color: #cbd5e1;
+    }
+    .sa-active-title strong {
+        color: #38bdf8;
+        font-weight: 700;
+    }
+
     /* ── KPI strip ── */
     .sa-kpi-row {
         display: grid;

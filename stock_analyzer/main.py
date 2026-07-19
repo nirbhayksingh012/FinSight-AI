@@ -564,6 +564,7 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
         st.session_state["ai_analyst_primary"] = tickers[0]
 
     primary = st.session_state["ai_analyst_primary"]
+    company_name = TICKER_DICT.get(primary, primary)
 
     st.markdown('<p class="sa-side-section" style="margin-top:0.2rem;margin-bottom:0.5rem;">Select Ticker Focus</p>', unsafe_allow_html=True)
 
@@ -576,9 +577,9 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
                 prev_p = float(raw_t["Close"].iloc[-2]) if len(raw_t) >= 2 else last_p
                 pct_chg = (last_p / prev_p - 1.0) * 100.0 if prev_p else 0.0
                 sign = "+" if pct_chg >= 0 else ""
-                card_label = f"{t} · ${last_p:,.2f} ({sign}{pct_chg:.2f}%)"
+                card_label = f"✓ {t} · ${last_p:,.2f} ({sign}{pct_chg:.2f}%)" if t == primary else f"{t} · ${last_p:,.2f} ({sign}{pct_chg:.2f}%)"
             else:
-                card_label = t
+                card_label = f"✓ {t}" if t == primary else t
 
             is_active = (t == primary)
             btn_type = "primary" if is_active else "secondary"
@@ -586,6 +587,15 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
                 st.session_state["ai_analyst_primary"] = t
                 st.session_state["rag_focus_pills"] = t
                 st.rerun()
+
+    # Active Ticker Banner
+    st.markdown(
+        f'<div class="sa-active-ticker-banner">'
+        f'<span class="sa-active-badge">● ACTIVE FOCUS</span>'
+        f'<span class="sa-active-title">Displaying live stats, news &amp; sentiment for <strong>{html.escape(company_name)} ({html.escape(primary)})</strong></span>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
 
     _init_chat_state(primary)
 
@@ -596,7 +606,7 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
 
     data = _prepare_ohlcv(raw_data)
 
-    with st.spinner("Fetching latest headlines…"):
+    with st.spinner(f"Fetching latest headlines for {company_name} ({primary})…"):
         headlines = _cached_headlines(primary)
 
     titles = [h["title"] for h in headlines]
@@ -629,34 +639,36 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
 
     stock_summary = _stock_text_summary(primary, data)
 
-    st.markdown("#### News (Google News RSS)")
+    st.markdown(f"#### 📰 News for {html.escape(company_name)} ({html.escape(primary)})")
+    st.caption(f"Showing latest Google News RSS headlines for {html.escape(company_name)} ({html.escape(primary)}).")
     if not headlines:
-        st.warning("No headlines returned. The RSS feed may be empty or temporarily blocked.")
+        st.warning(f"No headlines returned for {company_name} ({primary}). The RSS feed may be empty or temporarily blocked.")
     else:
         for h in headlines[:12]:
             st.markdown(f"- [{h['title']}]({h['link']})")
 
-    st.markdown("#### Sentiment (FinBERT)")
+    st.markdown(f"#### 📊 Sentiment Analysis for {html.escape(company_name)} ({html.escape(primary)})")
+    st.caption(f"FinBERT headline sentiment distribution for {html.escape(company_name)} ({html.escape(primary)}).")
     if sent.get("error"):
         st.warning(sent["error"])
     else:
         _render_sentiment_bars(sent.get("labels_pct") or {})
 
-    st.markdown("#### AI report (Groq)")
+    st.markdown(f"#### 🤖 AI Report for {html.escape(company_name)} ({html.escape(primary)})")
     report_key = f"ai_md_report::{primary}"
 
     # Auto-generate report on select if not already in session state
     if report_key not in st.session_state:
-        with st.spinner(f"Generating AI analyst report for {primary}..."):
+        with st.spinner(f"Generating AI analyst report for {company_name} ({primary})..."):
             _generate_and_index_report(primary, stock_summary, headlines, sent)
 
     col_rep1, col_rep2 = st.columns([8, 2])
     with col_rep1:
-        st.caption("AI report automatically generated based on latest data.")
+        st.caption(f"AI report automatically generated based on latest price data and news for {company_name} ({primary}).")
     with col_rep2:
         refresh_ai = st.button("Refresh report", key=f"refresh_report_{primary}")
         if refresh_ai:
-            with st.spinner(f"Re-generating AI report for {primary}..."):
+            with st.spinner(f"Re-generating AI report for {company_name} ({primary})..."):
                 _generate_and_index_report(primary, stock_summary, headlines, sent)
                 st.rerun()
 
