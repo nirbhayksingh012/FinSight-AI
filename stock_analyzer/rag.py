@@ -60,7 +60,6 @@ def query_documents(
     """
     if not query_text.strip():
         return {"documents": [[]], "metadatas": [[]], "distances": [[]], "ids": [[]]}
-
     return collection.query(
         query_texts=[query_text],
         n_results=max(1, int(n_results)),
