@@ -5,7 +5,6 @@ import pandas as pd
 import plotly.graph_objects as go
 # pyrefly: ignore [missing-import]
 from plotly.subplots import make_subplots
-
 from stock_analyzer.constants import CHART_LAYOUT
 
 
