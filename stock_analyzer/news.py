@@ -24,6 +24,7 @@ _DEFAULT_UA = (
 def _build_rss_url(ticker: str) -> str:
     # Include "stock" to bias results toward finance coverage.
     query = urllib.parse.quote_plus(f"{ticker.strip().upper()} stock")
+    
     return _GOOGLE_NEWS_RSS.format(query=query)
 
 
