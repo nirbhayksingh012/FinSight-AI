@@ -5,7 +5,6 @@ ChromaDB helpers for lightweight RAG over news + stock summaries.
 from __future__ import annotations
 from pathlib import Path
 from typing import Any
-
 # pyrefly: ignore [missing-import]
 import chromadb
 
