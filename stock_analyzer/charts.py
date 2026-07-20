@@ -61,7 +61,6 @@ def make_volume_figure(data: pd.DataFrame) -> go.Figure:
     )
     return _apply_dark_layout(fig)
 
-
 def _volume_bar_colors(data: pd.DataFrame) -> list[str]:
     colors: list[str] = []
     for i in range(len(data)):
