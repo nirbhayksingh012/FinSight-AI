@@ -56,7 +56,6 @@ def query_documents(
 ) -> dict[str, Any]:
     """
     Query Chroma for nearest neighbors.
-
     Returns Chroma's query result dict (documents, metadatas, distances, ids).
     """
     if not query_text.strip():
