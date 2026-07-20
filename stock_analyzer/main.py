@@ -621,7 +621,7 @@ def _render_ai_analyst_tab(tickers: list[str], start_date, end_date) -> None:
         day_pct = 0.0
 
     ma20_v = (
-        float(last_full["MA20"])
+        float(last_full["MA20"])  
         if "MA20" in data.columns and pd.notna(last_full.get("MA20"))
         else float("nan")
     )

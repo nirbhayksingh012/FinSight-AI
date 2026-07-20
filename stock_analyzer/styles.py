@@ -1003,7 +1003,7 @@ def chat_css() -> str:
         color: #7dd3fc;
         box-shadow: 0 0 14px rgba(56,189,248,0.15);
     }
-    .sa-chat-title {
+    .sa-chat-title { 
         font-size: 1rem;
         font-weight: 700;
         color: #f1f5f9;
